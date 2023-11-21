@@ -55,12 +55,43 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title">
 
-        <ImageView
-            android:id="@+id/protract"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/bg_null" />
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/protract"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/bg_null" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/list_parent"
+                android:orientation="vertical"
+                android:background="@color/white"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:textColor="@color/black"
+                    android:layout_margin="15dp"
+                    android:layout_gravity="center_horizontal"
+                    android:text="蓝牙设备"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/ble_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+        </FrameLayout>
     </androidx.cardview.widget.CardView>
 
 
@@ -102,7 +133,6 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-
 
             <GridLayout
                 android:id="@+id/main_grid"
@@ -158,16 +188,16 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/buzzer_button"
+            android:id="@+id/third_button"
             style="@style/ImageButtonStyle"
             android:src="@drawable/buzzer_close"
-            app:layout_constraintBottom_toBottomOf="@+id/flash_button"
+            app:layout_constraintBottom_toBottomOf="@+id/second_button"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/flash_button"
-            app:layout_constraintTop_toTopOf="@+id/flash_button" />
+            app:layout_constraintStart_toEndOf="@+id/second_button"
+            app:layout_constraintTop_toTopOf="@+id/second_button" />
 
         <ImageView
-            android:id="@+id/flash_button"
+            android:id="@+id/second_button"
             style="@style/ImageButtonStyle"
             android:src="@drawable/flash_close"
             app:layout_constraintBottom_toTopOf="@+id/guideline3"
@@ -176,23 +206,23 @@
             app:layout_constraintTop_toTopOf="@+id/guideline3" />
 
         <ImageView
-            android:id="@+id/camera_button"
+            android:id="@+id/first_button"
             style="@style/ImageButtonStyle"
             android:scaleX="1.2"
             android:scaleY="1.2"
             android:src="@drawable/camera_close"
-            app:layout_constraintBottom_toBottomOf="@+id/flash_button"
-            app:layout_constraintEnd_toStartOf="@+id/flash_button"
+            app:layout_constraintBottom_toBottomOf="@+id/second_button"
+            app:layout_constraintEnd_toStartOf="@+id/second_button"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toTopOf="@+id/flash_button" />
+            app:layout_constraintTop_toTopOf="@+id/second_button" />
 
         <ImageView
-            android:id="@+id/http_setting"
+            android:id="@+id/storage_setting"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:padding="25dp"
             android:src="@drawable/iot"
-            app:layout_constraintBottom_toTopOf="@+id/flash_button"
+            app:layout_constraintBottom_toTopOf="@+id/second_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
             app:layout_constraintTop_toTopOf="parent" />
@@ -207,7 +237,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toBottomOf="@+id/flash_button"
+            app:layout_constraintTop_toBottomOf="@+id/second_button"
             app:layout_constraintVertical_bias="0.0"
             tools:ignore="RtlSymmetry">
 
@@ -241,15 +271,15 @@
                     style="@style/TextViewBaseStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="IP 地址："
+                    android:text="连接地址："
                     android:textSize="15sp" />
 
                 <TextView
-                    android:id="@+id/ip_text"
+                    android:id="@+id/address_text"
                     style="@style/TextViewBaseStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="请先设置IP地址"
+                    android:text="请先设置对应连接类型地址"
                     android:textSize="13sp" />
             </LinearLayout>
         </LinearLayout>
