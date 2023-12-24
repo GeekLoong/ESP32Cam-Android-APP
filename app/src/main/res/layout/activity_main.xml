@@ -90,6 +90,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/bt_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textColor="@color/black"
+                    android:layout_margin="15dp"
+                    android:layout_gravity="center_horizontal"
+                    android:text="当前未连接设备"/>
             </LinearLayout>
         </FrameLayout>
     </androidx.cardview.widget.CardView>
@@ -271,7 +282,7 @@
                     style="@style/TextViewBaseStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="连接地址："
+                    android:text="IP地址："
                     android:textSize="15sp" />
 
                 <TextView
@@ -279,7 +290,7 @@
                     style="@style/TextViewBaseStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="请先设置对应连接类型地址"
+                    android:text="未连接"
                     android:textSize="13sp" />
             </LinearLayout>
         </LinearLayout>

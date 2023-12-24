@@ -11,7 +11,7 @@ object SharedPreferencesUtil {
         spe = sp.edit()
     }
 
-    fun get(key: String): String {
+    fun query(key: String): String {
         return if (::sp.isInitialized) {
             sp.getString(key, "") ?: ""
         } else {
@@ -19,7 +19,7 @@ object SharedPreferencesUtil {
         }
     }
 
-    fun set(key: String, value: String) {
+    fun insert(key: String, value: String) {
         spe.putString(key, value)
         spe.commit()
     }
