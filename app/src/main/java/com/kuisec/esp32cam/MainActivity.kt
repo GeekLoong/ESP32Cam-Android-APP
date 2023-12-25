@@ -309,9 +309,9 @@ class MainActivity : AppCompatActivity(), OnClickListener {
                         if (SharedPreferencesUtil.query("ble_mode") == "是") {
                             Thread {
                                 classicResult = bluetoothAdapter.bondedDevices.toList()
+                                val btListAdapter =
+                                    ClassicBTListAdapter(classicResult, itemSocketListener)
                                 runOnUiThread {
-                                    val btListAdapter =
-                                        ClassicBTListAdapter(classicResult, itemSocketListener)
                                     binding.bleList.adapter = btListAdapter
                                     binding.bleList.layoutManager = LinearLayoutManager(this)
                                 }
@@ -519,7 +519,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
                     Log.d("BT", "蓝牙已连接")
                     binding.firstButton.setImageResource(R.drawable.ble_connect)
                     if (SharedPreferencesUtil.query("ble_mode") == "是") {
-                        binding.btState.text = ""
+                        binding.btState.text = "当前连接设备为【${classicBTName}】"
                     } else {
                         binding.btState.text = "当前连接设备为【${connectGatt!!.device.name}】"
                     }
@@ -535,11 +535,11 @@ class MainActivity : AppCompatActivity(), OnClickListener {
                         it.close()
                         connectGatt = null
                     }
-                    btSocket?.run {
-                        close()
-                        outputStream.close()
-                        btSocket = null
+                    btSocket?.also {
+                        btOutputStream?.close()
                         btOutputStream = null
+                        it.close()
+                        btSocket = null
                     }
                     Toast.makeText(this@MainActivity, "已重置蓝牙连接", Toast.LENGTH_SHORT).show()
                     Log.d("BT", "已重置蓝牙连接")
@@ -613,19 +613,38 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         connectGatt = results[it].device.connectGatt(this, false, gattCallback)
     }
 
+    private var classicBTName: String = ""
     private var btSocket: BluetoothSocket? = null
     private var btOutputStream: OutputStream? = null
     private val itemSocketListener: (Int) -> Unit = {
-        mHandler.sendMessage(mHandler.obtainMessage(SHOW, "开始连接，请稍等！请勿重复点击！"))
-        btSocket = classicResult[it].run {
-            createRfcommSocketToServiceRecord(uuids.first().uuid)
-        }
-        btSocket?.run {
-            connect()
-            if (isConnected) {
-                mHandler.sendMessage(mHandler.obtainMessage(BT_CONNECT))
-                btOutputStream = outputStream
-            }
+        //当蓝牙已连接的情况下，断开蓝牙
+        if (btSocket != null) {
+            mHandler.sendMessage(
+                mHandler.obtainMessage(
+                    SHOW,
+                    "当前已连接设备，若要重新连接请刷新蓝牙后重新选择设备。"
+                )
+            )
+        } else {
+            mHandler.sendMessage(mHandler.obtainMessage(SHOW, "开始连接，请稍等！请勿重复点击！"))
+            Thread {
+                btSocket = classicResult[it].run {
+                    classicBTName = name ?: "该蓝牙设备无有效名称"
+                    createRfcommSocketToServiceRecord(uuids.first().uuid)
+                }
+                btSocket?.run {
+                    try {
+                        connect()
+                        if (isConnected) {
+                            mHandler.sendMessage(mHandler.obtainMessage(BT_CONNECT))
+                            btOutputStream = outputStream
+                        }
+                    } catch (e: IOException) {
+                        mHandler.sendMessage(mHandler.obtainMessage(SHOW, "上次的连接还未完全关闭，请稍等几秒后再试！"))
+                        mHandler.sendMessage(mHandler.obtainMessage(BT_DISCONNECT))
+                    }
+                }
+            }.start()
         }
     }
 
